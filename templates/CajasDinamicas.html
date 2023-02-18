@@ -1,0 +1,35 @@
+{% extends "layout.html"%}
+
+{% block content %}
+<div class="col-xs-6">
+    {%from "_macros.html" import render_Field %}
+    <form action="/" method="post">
+        <input type="hidden" name="csrf_token" value="{{csrf_token()}}"/>
+        <div class="row control-group">
+            <div class="form-group">
+                {{render_Field(form.numero)}}
+            </div>
+        </div>
+        <input type="submit" id="al" name="al" value="GENERAR">
+    </form>
+    {% if numero!=null %}
+        <form action="/Calculos" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <div class="row control-group">
+                <div class="form-group" id="contenido">
+                    {% for num in range(numero) %}
+                    <label for="txtNum">Número {{num+1}}</label>
+                    <input type="number" name="txtNum" id="txtNum">
+                    {% endfor %}
+                </div>
+                <input type="submit" value="CALCULAR">
+            </div>
+    </form>
+    {% endif %}
+
+</div>
+<div class="col-md-4">
+
+</div>
+
+{% endblock content %}
