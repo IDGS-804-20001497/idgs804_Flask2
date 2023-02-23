@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block content %}
+
+    <div class="col-xs-6">
+        {% from '_macros.html' import render_Field %}
+        <form action="" method="POST" novalidate>
+        {{form.csrf_token}}
+        <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+
+            <div class="row control-group">
+  
+            {{render_Field(form.username)}}
+            {{render_Field(form.password)}}
+            
+            <input type="submit" id="al" name="al" value="Registrar">
+        </form>
+    </div>
+
+{% endblock %}

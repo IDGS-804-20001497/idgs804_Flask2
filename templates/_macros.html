@@ -12,7 +12,6 @@
 
 {% endmacro %}
 
-
 {%macro render_Field(field)%}
 
 <div class="control_group">
@@ -21,5 +20,14 @@
         {{field(**kwargs)|safe}}
     </div>
 </div>
+{% if field.errors %}
+<ul>
+    {% for error in field.errors %}
+    <li style = "color: red;">
+        {{error}}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
 
 {%endmacro%}
