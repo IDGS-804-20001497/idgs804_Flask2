@@ -10,8 +10,11 @@
                 {{render_Field(form.numero)}}
             </div>
         </div>
+        <br>
+        <br>
         <input type="submit" id="al" name="al" value="GENERAR">
     </form>
+    <br>
     {% if numero!=null %}
         <form action="/Calculos" method="post">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
@@ -22,6 +25,7 @@
                     <input type="number" name="txtNum" id="txtNum">
                     {% endfor %}
                 </div>
+                <br>
                 <input type="submit" value="CALCULAR">
             </div>
     </form>

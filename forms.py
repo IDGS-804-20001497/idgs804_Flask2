@@ -1,9 +1,12 @@
 from wtforms import Form
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, FieldList, FormField, SelectField, RadioField
-from wtforms.fields import EmailField, TextAreaField, PasswordField, RadioField
+from wtforms import StringField, SubmitField, FieldList, FormField, SelectField, RadioField,EmailField,PasswordField
+from wtforms import Form
+from wtforms import StringField, IntegerField
+from wtforms.fields import FieldList
 from wtforms import validators
 from wtforms.validators import DataRequired
+
 
 def mi_validacion(form, field):
     if len(field.data) == 0:
@@ -24,9 +27,16 @@ class UserForm(Form):
     email = EmailField('Correo')
     numero = StringField('Numero')
 
-class WordsForm(Form):
-    spanish = StringField('Spanish')
-    english = StringField('English')
+class WordForm(FlaskForm):
+    spanish_word = StringField('Palabra en español', validators=[DataRequired()])
+    english_word = StringField('Palabra en inglés', validators=[DataRequired()])
+    submit = SubmitField('Guardar')
+
+class TranslateForm(FlaskForm):
+    word = StringField('Palabra a traducir', validators=[DataRequired()])
+    language = RadioField('Idioma', choices=[('english', 'Inglés'), ('spanish', 'Español')], default='english')
+    submit = SubmitField('Traducir')
+
 
 
 class LoginForm(Form):
@@ -37,5 +47,3 @@ class LoginForm(Form):
     password = PasswordField('Contraseña',
     [validators.DataRequired('El campo es requerido'),
     validators.length(min =5, max = 10, message = 'Ingresa min 5 max 10')])
-
-

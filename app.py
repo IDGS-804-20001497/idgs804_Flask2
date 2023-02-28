@@ -1,11 +1,13 @@
 from flask import Flask, render_template
 from flask import request
 from flask_wtf.csrf import CSRFProtect
-from forms import * 
+import forms
 from collections import Counter
 from flask import make_response
 from flask import flash
 import os
+from flask import Flask, render_template, request
+from forms import WordForm, TranslateForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "ESTA ES UNA CLAVE ENCRIPTADA"
@@ -86,34 +88,31 @@ def Calculos():
     return render_template("Calculos.html", lista = lista, maxim = maxim, minimo = minimo, promedio = promedio, resultado = resultado)
     
 @app.route('/traductor', methods=['GET', 'POST'])
-def traductor():
-    
-    words = form.WordsForm(request.forms)
-    palabraEncontrada = ''
-    if(request.method == 'POST' and words.validate()):
-        btnGuardar = request.form.get('btnGuardar')
-        btnTraducir = request.form.get('btnTraducir')
-        if(btnGuardar == 'Guardar'):    
-            file = open('palabras.txt', 'a')
-            file.write('\n' + words.spanish.data.upper() + '\n' + words.english.data.upper())
-            file.close()
-        if(btnTraducir == 'Traducir'):
-            opcion = request.form.get('translate')
-            file = open('palabras.txt', 'r')
-            palabras = [linea.rstrip('\n') for linea in file]
-            if(opcion == 'spanish'):
-                spanishWord = request.form.get('txtSpanish')
-                for posicion in range(len(palabras)):
-                    if(palabras[posicion] == spanishWord.upper()):
-                        palabraEncontrada = palabras[posicion - 1]
-            elif(opcion == 'english'):
-                englishWord = request.form.get('txtEnglish')
-                for posicion in range(len(palabras)):
-                    if(palabras[posicion] == englishWord.upper()):
-                        palabraEncontrada = palabras[posicion + 1]
-                        print(palabraEncontrada)
+def index():
+    word_form = WordForm()
+    translate_form = TranslateForm()
 
-    return render_template('traductor.html', form = words, palabraEncontrada = palabraEncontrada)
+    if word_form.validate_on_submit():
+        with open('palabras.txt', 'a') as f:
+            f.write(f'{word_form.spanish_word.data.lower()}={word_form.english_word.data.lower()}\n')
+        return render_template('traductor.html', word_form=word_form, translate_form=translate_form, message='Guardado con éxito')
+
+    if translate_form.validate_on_submit():
+        language = translate_form.language.data
+        with open('palabras.txt') as f:
+            words = dict(line.strip().lower().split('=') for line in f)
+            try:
+                if language == 'english':
+                    translation = words[translate_form.word.data.lower()]
+                else:
+                    translation = [key for key, value in words.items() if value == translate_form.word.data.lower()][0]
+                message = f'Traducción: {translation}'
+            except (KeyError, IndexError):
+                message = 'No se encuentra la traducción'
+        return render_template('traductor.html', word_form=word_form, translate_form=translate_form, message=message)
+
+    return render_template('traductor.html', word_form=word_form, translate_form=translate_form)
+
 
 if __name__ == "__main__":
     csrf.init_app(app)

@@ -1,34 +1,41 @@
-{% extends 'layout.html' %}
+{% extends "layout.html" %} 
 {% block content %}
-{% from '_macros.html' import render_field %}
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Traductor</h1>
 
-<div class="container-fluid">
-    <form action="" method="post" novalidate>
-        {{form.csrf_token}}
-        <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
-        <div class="span5">
-            <div class="row control_group">
-                {{render_field(form.spanish)}}
-                {{render_field(form.english)}}
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Agregar palabras</h2>
+                <form method="POST">
+                    {{ word_form.csrf_token }}
+                    <div class="form-group">
+                        {{ word_form.spanish_word.label }}
+                        {{ word_form.spanish_word(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ word_form.english_word.label }}
+                        {{ word_form.english_word(class="form-control") }}
+                    </div>
+                    {{ word_form.submit(class="btn btn-primary") }}
+                </form>
+                {% if message %}
+                    <div class="alert alert-success mt-3">{{ message }}</div>
+                {% endif %}
             </div>
-            <input type="submit" value="Guardar" id="btnGuardar" name="btnGuardar" class="btn btn-primary">
-        </div>
-        <div class="span5">
-            <div class="row control_group">
-                <input type="radio" name="translate" value="spanish"> Español
-                <input type="text" name="txtSpanish" id="txtSpanish">
-                <br>
-                <input type="radio" name="translate" value="english"> Ingles
-                <input type="text" name="txtEnglish" id="txtEnglish">
-                <br>
-            </div>
-            <input type="submit" value="Traducir" id="btnTraducir" name="btnTraducir" class="btn btn-primary">
-            <br>
-            <br>
-            <h1>
-                {{palabraEncontrada}}
-            </h1>
-        </div>
+
+    <h2>Traducir palabras</h2>
+    <form method="POST">
+        {{ translate_form.csrf_token }}
+        {{ translate_form.word.label }}
+        {{ translate_form.word }}
+        {{ translate_form.language.label }}
+        {{ translate_form.language }}
+        {{ translate_form.submit (class="btn btn-primary")}}
     </form>
+    {% if message %}
+        <div class="alert alert-info mt-3">{{ message }}</div>
+    {% endif %}
+</div>
 </div>
 {% endblock %}
