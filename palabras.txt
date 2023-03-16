@@ -1,1 +1,3 @@
 agua=water
+ojo=eye
+pelota=ball
